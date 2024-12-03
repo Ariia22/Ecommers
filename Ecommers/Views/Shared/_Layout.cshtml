@@ -3,16 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ecommers</title>
+    <title>@ViewData["Title"] - Ecommercers</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Ecommers.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Ecommercers.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ecommers</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ecommerce</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -25,6 +26,62 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Carrito" asp-action="Index">Carrito</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Products</a>
+                        </li>
+                        <!--
+                        <a href="/Carrito/Index" class="btn btn-secondary position-relative">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                            0
+                        </span>
+                        </a>
+                                                -->
+             
+                        <div class="dropdown">
+                            <button class="btn position-relative"
+                                    type="button"
+                                    id="carritoDropdown"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-cart"></i>
+                                <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    0
+                                </span>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="carritoDropdown" style="width: 300px;">
+                                <li id="carrito-listado">
+                                    <!-- Aquí se inyectarán los productos dinámicamente -->
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>Subtotal:</span>
+                                    <span id="carrito-subtotal">$0.00</span>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>IVA (16%):</span>
+                                    <span id="carrito-iva">$0.00</span>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>Total:</span>
+                                    <span id="carrito-total">$0.00</span>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <button id="vaciar-carrito" class="btn btn-danger w-100">Vaciar Carrito</button>
+                                </li>
+                            </ul>
+                        </div>
+
+
                     </ul>
                 </div>
             </div>
@@ -38,12 +95,99 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - Ecommers - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - Ecommercers - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const carritoListado = document.getElementById('carrito-listado');
+                    const carritoConteo = document.getElementById('carrito-conteo');
+                    const botonVaciar = document.getElementById('vaciar-carrito');
+                    let carrito = [];
+
+                    // Actualizar la tabla del carrito
+                    const actualizarCarritoUI = () => {
+                        carritoListado.innerHTML = ''; // Limpiar contenido previo
+
+                        if (carrito.length === 0) {
+                            carritoListado.innerHTML = '<p class="text-center">No hay nada en el carrito</p>';
+                            carritoConteo.textContent = 0;
+                            return;
+                        }
+
+                        const table = document.createElement('table');
+                        table.className = 'table table-striped';
+
+                        const header = `
+        <thead>
+        <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Acciones</th>
+        </tr>
+        </thead>
+                            `;
+                        const body = document.createElement('tbody');
+
+                        carrito.forEach((producto, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+        <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px;"></td>
+        <td>${producto.nombre}</td>
+        <td>${producto.precio}</td>
+        <td><button class="btn btn-danger btn-sm eliminar-producto" data-index="${index}">Eliminar</button></td>
+                                `;
+                            body.appendChild(row);
+                        });
+
+                        table.innerHTML = header;
+                        table.appendChild(body);
+                        carritoListado.appendChild(table);
+
+                        // Actualizar el conteo del carrito
+                        carritoConteo.textContent = carrito.length;
+                    };
+
+                    // Agregar producto al carrito
+                    document.querySelectorAll('.agregar-carrito').forEach((button) => {
+                        button.addEventListener('click', (e) => {
+                            const card = e.target.closest('.card');
+                            const producto = {
+                                nombre: card.querySelector('.card-title').textContent,
+                                precio: card.querySelector('.card-text strong').textContent,
+                                imagen: card.querySelector('img') ? card.querySelector('img').src : 'https://via.placeholder.com/50',
+                            };
+
+                            carrito.push(producto);
+                            actualizarCarritoUI();
+                        });
+                    });
+
+                    // Eliminar un producto del carrito
+                    carritoListado.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('eliminar-producto')) {
+                            const index = e.target.dataset.index;
+                            carrito.splice(index, 1); // Eliminar producto del array
+                            actualizarCarritoUI();
+                        }
+                    });
+
+                    // Vaciar el carrito
+                    botonVaciar.addEventListener('click', () => {
+                        carrito = [];
+                        actualizarCarritoUI();
+                    });
+
+                    // Inicializar UI
+                    actualizarCarritoUI();
+                });
+    </script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
