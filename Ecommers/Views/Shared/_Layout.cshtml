@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - Ecommercers</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Ecommercers.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Ecommercers.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
@@ -102,89 +102,93 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const carritoListado = document.getElementById('carrito-listado');
-                    const carritoConteo = document.getElementById('carrito-conteo');
-                    const botonVaciar = document.getElementById('vaciar-carrito');
-                    let carrito = [];
+                       document.addEventListener('DOMContentLoaded', () => {
+            const carritoListado = document.getElementById('carrito-listado');
+            const carritoConteo = document.getElementById('carrito-conteo');
+            const botonVaciar = document.getElementById('vaciar-carrito');
+            let carrito = [];
 
-                    // Actualizar la tabla del carrito
-                    const actualizarCarritoUI = () => {
-                        carritoListado.innerHTML = ''; // Limpiar contenido previo
+            // Actualizar la tabla del carrito
+            const actualizarCarritoUI = () => {
+                carritoListado.innerHTML = ''; // Limpiar contenido previo
 
-                        if (carrito.length === 0) {
-                            carritoListado.innerHTML = '<p class="text-center">No hay nada en el carrito</p>';
-                            carritoConteo.textContent = 0;
-                            return;
-                        }
+                if (carrito.length === 0) {
+                    carritoListado.innerHTML = '<p class="text-center">No hay nada en el carrito</p>';
+                    carritoConteo.textContent = 0;
+                    return;
+                }
 
-                        const table = document.createElement('table');
-                        table.className = 'table table-striped';
+                const table = document.createElement('table');
+                table.className = 'table table-striped';
 
-                        const header = `
-        <thead>
-        <tr>
-        <th>Imagen</th>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Acciones</th>
-        </tr>
-        </thead>
-                            `;
-                        const body = document.createElement('tbody');
-
-                        carrito.forEach((producto, index) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-        <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px;"></td>
-        <td>${producto.nombre}</td>
-        <td>${producto.precio}</td>
-        <td><button class="btn btn-danger btn-sm eliminar-producto" data-index="${index}">Eliminar</button></td>
+                const header = `
+                <thead>
+                <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+                </tr>
+                </thead>
                                 `;
-                            body.appendChild(row);
-                        });
+                const body = document.createElement('tbody');
 
-                        table.innerHTML = header;
-                        table.appendChild(body);
-                        carritoListado.appendChild(table);
+                carrito.forEach((producto, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px;"></td>
+                <td>${producto.nombre}</td>
+                <td>${producto.precio}</td>
+                <td><button class="btn btn-danger btn-sm eliminar-producto" data-index="${index}">Eliminar</button></td>
+                                `;
+                    body.appendChild(row);
+                });
 
-                        // Actualizar el conteo del carrito
-                        carritoConteo.textContent = carrito.length;
-                    };
+                table.innerHTML = header;
+                table.appendChild(body);
+                carritoListado.appendChild(table);
 
-                    // Agregar producto al carrito
-                    document.querySelectorAll('.agregar-carrito').forEach((button) => {
-                        button.addEventListener('click', (e) => {
-                            const card = e.target.closest('.card');
-                            const producto = {
-                                nombre: card.querySelector('.card-title').textContent,
-                                precio: card.querySelector('.card-text strong').textContent,
-                                imagen: card.querySelector('img') ? card.querySelector('img').src : 'https://via.placeholder.com/50',
-                            };
+                // Actualizar el conteo del carrito
+                carritoConteo.textContent = carrito.length;
+            };
 
-                            carrito.push(producto);
-                            actualizarCarritoUI();
-                        });
-                    });
+            // Agregar producto al carrito (asegúrate de que los botones existan)
+            const agregarBotones = () => {
+                document.querySelectorAll('.agregar-carrito').forEach((button) => {
+                    button.addEventListener('click', (e) => {
+                        const card = e.target.closest('.card');
+                        const producto = {
+                            nombre: card.querySelector('.card-title').textContent,
+                            precio: card.querySelector('.card-text strong').textContent,
+                            imagen: card.querySelector('img') ? card.querySelector('img').src : 'https://via.placeholder.com/50',
+                        };
 
-                    // Eliminar un producto del carrito
-                    carritoListado.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('eliminar-producto')) {
-                            const index = e.target.dataset.index;
-                            carrito.splice(index, 1); // Eliminar producto del array
-                            actualizarCarritoUI();
-                        }
-                    });
-
-                    // Vaciar el carrito
-                    botonVaciar.addEventListener('click', () => {
-                        carrito = [];
+                        carrito.push(producto);
                         actualizarCarritoUI();
                     });
-
-                    // Inicializar UI
-                    actualizarCarritoUI();
                 });
+            };
+
+            // Eliminar un producto del carrito
+            carritoListado.addEventListener('click', (e) => {
+                if (e.target.classList.contains('eliminar-producto')) {
+                    const index = e.target.dataset.index;
+                    carrito.splice(index, 1); // Eliminar producto del array
+                    actualizarCarritoUI();
+                }
+            });
+
+            // Vaciar el carrito
+            botonVaciar.addEventListener('click', () => {
+                carrito = [];
+                actualizarCarritoUI();
+            });
+
+            // Inicializar UI
+            actualizarCarritoUI();
+            agregarBotones(); // Llamamos aquí para asegurar que los botones sean registrados después de cargar la UI
+
+        });
     </script>
 
 

@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h5 class="card-title">@product.Nombre</h5>
                         <p class="card-text">@product.Descripcion</p>
-                        <p class="card-text"><strong>Precio: $@product.Precio MXN</strong></p>
+                        <p class="card-text"><strong>Precio: $@product.Precio M</strong></p>
                         <button class="btn btn-primary agregar-carrito">
                             Agregar al carrito
                         </button>
@@ -37,76 +37,52 @@
         </ul>
     </nav>
 </div>
-
-
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('/Carrito/ObtenerCarrito')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length === 0) {
-                        document.getElementById('carrito').innerHTML = '<p>No hay nada en el carrito</p>';
+        // Espera a que el DOM se cargue completamente
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleccionamos todos los botones de 'agregar al carrito'
+            const botonesAgregarCarrito = document.querySelectorAll('.agregar-carrito');
+
+            // Añadimos el 'eventListener' a cada uno de los botones
+            botonesAgregarCarrito.forEach(function(button) {
+                button.addEventListener('click', function (e) {
+                    // Seleccionamos el contenedor de la tarjeta del producto
+                    const productoCard = e.target.closest('.card'); // Utilizamos closest para obtener el contenedor de la tarjeta
+
+                    if (productoCard) {
+                        // Obtenemos el nombre, precio y el id del producto
+                        const nombre = productoCard.querySelector('.card-title')?.textContent || 'Nombre no disponible';
+                        const imagen = productoCard.querySelector('img')?.src || '';
+                        const precioText = productoCard.querySelector('.card-text')?.textContent || '';
+                        const precio = precioText ? precioText.split('$')[1]?.trim() : '0.00'; // Extraemos el precio y lo limpiamos
+
+                        const product = {
+                            imagen: imagen,
+                            nombre: nombre,
+                            precio: precio,
+                            id: productoCard.getAttribute('data-id')
+                        };
+
+                        // Enviar el producto al servidor
+                        fetch('/Carrito/AgregarProducto', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(product)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length === 0) {
+                                document.getElementById('carrito').innerHTML = '<p>No hay nada en el carrito</p>';
+                            } else {
+                                // Código para actualizar el carrito en el DOM con los datos actualizados
+                            }
+                        });
                     } else {
-                        // Código para actualizar el carrito en el DOM con los datos obtenidos
+                        console.error('No se encontró el contenedor del producto.');
                     }
                 });
-        });
-
-        document.querySelector('#lista-cursos').addEventListener('click', function (e) {
-            if (e.target.classList.contains('agregar-carrito')) {
-                const product = {
-                    imagen: e.target.parentElement.parentElement.querySelector('img').src,
-                    nombre: e.target.parentElement.parentElement.querySelector('h4').textContent,
-                    precio: e.target.parentElement.parentElement.querySelector('.precio span').textContent,
-                    id: e.target.parentElement.parentElement.querySelector('a').getAttribute('data-id')
-                };
-
-                fetch('/Carrito/AgregarProducto', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(product)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length === 0) {
-                            document.getElementById('carrito').innerHTML = '<p>No hay nada en el carrito</p>';
-                        } else {
-                            // Código para actualizar el carrito en el DOM con los datos actualizados
-                        }
-                    });
-            }
-        });
-
-        document.querySelector('#carrito').addEventListener('click', function (e) {
-            if (e.target.classList.contains('borrar-product')) {
-                const productId = e.target.getAttribute('data-id');
-
-                fetch('/Carrito/EliminarProducto', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(productId)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length === 0) {
-                            document.getElementById('carrito').innerHTML = '<p>No hay nada en el carrito</p>';
-                        } else {
-                            // Código para actualizar el carrito en el DOM con los datos actualizados
-                        }
-                    });
-            }
-        });
-
-        document.querySelector('#vaciar-carrito').addEventListener('click', function () {
-            fetch('/Carrito/VaciarCarrito', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('carrito').innerHTML = '<p>No hay nada en el carrito</p>';
-                });
+            });
         });
     </script>
 }
