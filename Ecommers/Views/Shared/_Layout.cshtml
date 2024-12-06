@@ -26,12 +26,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item border border-2">
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">
                                 Carrito
                             </a>
                         </li>
-                        <li class="nav-item border border-2">
+                        <li class="nav-item">
                             <div class="dropdown">
                                 <button class="btn position-relative"
                                         type="button"
@@ -53,21 +53,7 @@
                                         {
                                             <li><a class="dropdown-item">@item.ProductName - @item.Quantity x @item.Price.ToString("C", new System.Globalization.CultureInfo("es-MX"))</a></li>
                                         }
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li class="d-flex justify-content-between">
-                                            <span>Subtotal:</span>
-                                            <span id="carrito-subtotal">$0.00</span>
-                                        </li>
-                                        <li class="d-flex justify-content-between">
-                                            <span>IVA (16%):</span>
-                                            <span id="carrito-iva">$0.00</span>
-                                        </li>
-                                        <li class="d-flex justify-content-between">
-                                            <span>Total:</span>
-                                            <span id="carrito-total">$0.00</span>
-                                        </li>
+                                        
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
@@ -86,63 +72,9 @@
                                 </ul>
                             </div>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Products</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">ProductosN</a>
                         </li>
-                        <!--
-                            <a href="/Carrito/Index" class="btn btn-secondary position-relative">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    0
-                                </span>
-                            </a>
-                        -->
-
-                        <div class="dropdown">
-                            <button class="btn position-relative"
-                                    type="button"
-                                    id="carritoDropdown"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <i class="bi bi-cart"></i>
-                                <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    0
-                                </span>
-                            </button>
-
-                            <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="carritoDropdown" style="width: 300px;">
-                                <li id="carrito-listado">
-                                    <!-- Aquí se inyectarán los productos dinámicamente -->
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>Subtotal:</span>
-                                    <span id="carrito-subtotal">$0.00</span>
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>IVA (16%):</span>
-                                    <span id="carrito-iva">$0.00</span>
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>Total:</span>
-                                    <span id="carrito-total">$0.00</span>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <button id="vaciar-carrito" class="btn btn-danger w-100">Vaciar Carrito</button>
-                                </li>
-                            </ul>
-                        </div>
-
-
                     </ul>
                 </div>
             </div>
