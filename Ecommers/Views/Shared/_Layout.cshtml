@@ -26,21 +26,82 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Carrito" asp-action="Index">Carrito</a>
+                        <li class="nav-item border border-2">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">
+                                Carrito
+                            </a>
                         </li>
+                        <li class="nav-item border border-2">
+                            <div class="dropdown">
+                                <button class="btn position-relative"
+                                        type="button"
+                                        id="carritoDropdown"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="bi bi-cart"></i>
+                                    <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        @ViewBag.CartCount
+                                    </span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="carritoDropdown">
+                                    @if (ViewBag.CartCount > 0)
+                                    {
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", "Cart")">Ver Carrito</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Checkout", "Cart")">Finalizar Compra</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        @foreach (var item in ViewBag.CartItems as List<CartItem>)
+                                        {
+                                            <li><a class="dropdown-item">@item.ProductName - @item.Quantity x @item.Price.ToString("C", new System.Globalization.CultureInfo("es-MX"))</a></li>
+                                        }
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>Subtotal:</span>
+                                            <span id="carrito-subtotal">$0.00</span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>IVA (16%):</span>
+                                            <span id="carrito-iva">$0.00</span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>Total:</span>
+                                            <span id="carrito-total">$0.00</span>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li>
+                                            <button id="vaciar-carrito" class="btn btn-danger w-100">Continuar con el pago</button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-outline-danger w-100" type="submit">Vaciar Carrito</button>
+                                        </li>
+
+                                    }
+                                    else
+                                    {
+                                        <li><span class="dropdown-item">El carrito está vacío</span></li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Products</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">ProductosN</a>
+                        </li>
                         <!--
-                        <a href="/Carrito/Index" class="btn btn-secondary position-relative">
-                        <i class="fa fa-shopping-cart"></i>
-                        <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                            0
-                        </span>
-                        </a>
-                                                -->
-             
+                            <a href="/Carrito/Index" class="btn btn-secondary position-relative">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span id="carrito-conteo" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    0
+                                </span>
+                            </a>
+                        -->
+
                         <div class="dropdown">
                             <button class="btn position-relative"
                                     type="button"
@@ -86,6 +147,7 @@
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -102,7 +164,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-                       document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const carritoListado = document.getElementById('carrito-listado');
             const carritoConteo = document.getElementById('carrito-conteo');
             const botonVaciar = document.getElementById('vaciar-carrito');
@@ -122,25 +184,25 @@
                 table.className = 'table table-striped';
 
                 const header = `
-                <thead>
-                <tr>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Acciones</th>
-                </tr>
-                </thead>
-                                `;
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                    `;
                 const body = document.createElement('tbody');
 
                 carrito.forEach((producto, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px;"></td>
-                <td>${producto.nombre}</td>
-                <td>${producto.precio}</td>
-                <td><button class="btn btn-danger btn-sm eliminar-producto" data-index="${index}">Eliminar</button></td>
-                                `;
+                            <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px;"></td>
+                            <td>${producto.nombre}</td>
+                            <td>${producto.precio}</td>
+                            <td><button class="btn btn-danger btn-sm eliminar-producto" data-index="${index}">Eliminar</button></td>
+                        `;
                     body.appendChild(row);
                 });
 
@@ -152,22 +214,20 @@
                 carritoConteo.textContent = carrito.length;
             };
 
-            // Agregar producto al carrito (asegúrate de que los botones existan)
-            const agregarBotones = () => {
-                document.querySelectorAll('.agregar-carrito').forEach((button) => {
-                    button.addEventListener('click', (e) => {
-                        const card = e.target.closest('.card');
-                        const producto = {
-                            nombre: card.querySelector('.card-title').textContent,
-                            precio: card.querySelector('.card-text strong').textContent,
-                            imagen: card.querySelector('img') ? card.querySelector('img').src : 'https://via.placeholder.com/50',
-                        };
+            // Agregar producto al carrito
+            document.querySelectorAll('.agregar-carrito').forEach((button) => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.card');
+                    const producto = {
+                        nombre: card.querySelector('.card-title').textContent,
+                        precio: card.querySelector('.card-text strong').textContent,
+                        imagen: card.querySelector('img') ? card.querySelector('img').src : 'https://via.placeholder.com/50',
+                    };
 
-                        carrito.push(producto);
-                        actualizarCarritoUI();
-                    });
+                    carrito.push(producto);
+                    actualizarCarritoUI();
                 });
-            };
+            });
 
             // Eliminar un producto del carrito
             carritoListado.addEventListener('click', (e) => {
@@ -186,10 +246,9 @@
 
             // Inicializar UI
             actualizarCarritoUI();
-            agregarBotones(); // Llamamos aquí para asegurar que los botones sean registrados después de cargar la UI
-
         });
     </script>
+
 
 
     @await RenderSectionAsync("Scripts", required: false)

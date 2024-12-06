@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Ecommers.Models.Product>
+@{
+    ViewData["Title"] = "Productos";
+    int currentPage = ViewBag.CurrentPage; int totalPages = ViewBag.TotalPages;
+
+}
+
+<h2>Productos</h2>
+
+<!-- Muestra los productos -->
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="@product.ImagenURL" class="card-img-top" alt="@product.Nombre">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Nombre</h5>
+                    <p class="card-text">@product.Descripcion</p>
+                    <p class="card-text text-success fw-bold">@product.Precio.ToString("C", new System.Globalization.CultureInfo("es-MX"))</p>
+                    <form asp-action="AddToCart" asp-controller="Products" method="post">
+                        <input type="hidden" name="id" value="@product.ProductoID" />
+                        <button type="submit" class="btn btn-primary w-100">Agregar al Carrito</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Paginación -->
+<div class="pagination">
+    @if (ViewBag.CurrentPage > 1)
+    {
+        <a href="@Url.Action("Index", "Products", new { page = ViewBag.CurrentPage - 1 })" class="btn btn-secondary">Anterior</a>
+    }
+
+    <span> Página @ViewBag.CurrentPage de @ViewBag.TotalPages </span>
+
+    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+    {
+        <a href="@Url.Action("Index", "Products", new { page = ViewBag.CurrentPage + 1 })" class="btn btn-secondary">Siguiente</a>
+    }
+</div>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        @if (currentPage > 1)
+        {
+            <li class="page-item"> <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1 })" aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+        } @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")"> <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a> </li>
+        } @if (currentPage < totalPages)
+        {
+            <li class="page-item"> <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1 })" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+        }
+    </ul>
+</nav>
