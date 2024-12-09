@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Ecommers.Models
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -76,9 +77,37 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">ProductosN</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            var userName = User.Identity.Name;
+                            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+                            var userEmail = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+
+                            <li class="nav-item">
+                                <p class="nav-link text-dark">Hola, @userName. Tu rol es @userRole y tu correo es @userEmail.</p>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
+                                    <button type="submit" class="btn btn-link nav-link">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Registrarse</a>
+                            </li>
+                        }
+                    </ul>
+
                 </div>
             </div>
         </nav>
+
 
     </header>
     <div class="container">

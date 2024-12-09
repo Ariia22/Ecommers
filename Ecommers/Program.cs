@@ -1,7 +1,17 @@
+using Ecommers.Data;
 using Ecommers.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Agregar autenticación con cookies
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";  // Ruta de login
+        options.LogoutPath = "/Account/Logout";  // Ruta de logout
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,6 +35,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Usar autenticación antes de la autorización
+app.UseAuthentication();  // Aquí se agrega el middleware de autenticación
 app.UseAuthorization();
 
 app.MapControllerRoute(

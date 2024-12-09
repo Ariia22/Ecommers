@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Ecommers.Models.Product>
+<h2>Panel de Administrador</h2>
+
+@if (!Model.Any())
+{
+    <p>No hay productos en el almacén. Solo el administrador puede agregar productos.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>VendedorId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ProductoID</td>
+                    <td>@product.Nombre</td>
+                    <td>@product.Precio.ToString("C")</td>
+                    <td>@product.Descripcion</td>
+                    <td>@product.VendorID</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

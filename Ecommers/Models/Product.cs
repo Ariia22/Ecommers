@@ -26,5 +26,7 @@ namespace Ecommers.Models
         public int Stock { get; set; }
 
         public string ImagenURL { get; set; }
+
+        public int? VendorID { get; set; }
     }
 }

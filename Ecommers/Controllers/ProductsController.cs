@@ -1,8 +1,7 @@
-﻿using Ecommers.Models;
+﻿using Ecommers.Data;
+using Ecommers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 
 namespace Ecommers.Controllers
@@ -50,6 +49,7 @@ namespace Ecommers.Controllers
                     Id = product.ProductoID,
                     ProductName = product.Nombre,
                     Price = product.Precio,
+                    Description = product.Descripcion,
                     Quantity = 1
                 };
 

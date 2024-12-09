@@ -1,0 +1,18 @@
+﻿@model Ecommers.Models.Product;
+<h2>Crear Producto</h2>
+
+<form asp-action="CreateProduct" method="post">
+    <div class="form-group">
+        <label for="Name">Nombre del Producto</label>
+        <input type="text" asp-for="Nombre" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Price">Precio</label>
+        <input type="number" asp-for="Precio" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
