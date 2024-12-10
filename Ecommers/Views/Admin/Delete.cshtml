@@ -1,0 +1,25 @@
+﻿@model Ecommers.Models.Product
+
+<h2>Eliminar Producto</h2>
+
+<div>
+    <h4>¿Estás seguro de que deseas eliminar este producto?</h4>
+    <div>
+        <strong>Nombre:</strong> @Model.Nombre
+    </div>
+    <div>
+        <strong>Descripción:</strong> @Model.Descripcion
+    </div>
+    <div>
+        <strong>Precio:</strong> @Model.Precio
+    </div>
+    <div>
+        <strong>Stock:</strong> @Model.Stock
+    </div>
+</div>
+
+<form asp-action="Delete" asp-controller="Admin" method="post">
+    <input type="hidden" asp-for="ProductoID" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

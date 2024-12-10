@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Ecommers.Models;
+using Ecommers.Data;
 
 namespace Ecommers.Controllers
 {
@@ -12,7 +14,7 @@ namespace Ecommers.Controllers
         [HttpGet("ObtenerCarrito")]
         public IActionResult ObtenerCarrito()
         {
-            var subtotal = carrito.Sum(p => decimal.Parse(p.Precio));
+            var subtotal = carrito.Sum(p => decimal.Parse(p.Precio)); // Asegúrate de que el precio es decimal
             var iva = subtotal * 0.16m; // IVA del 16%
             var total = subtotal + iva;
 
@@ -29,7 +31,7 @@ namespace Ecommers.Controllers
         [HttpPost("AgregarProducto")]
         public IActionResult AgregarProducto([FromBody] Producto producto)
         {
-            if (producto == null || string.IsNullOrEmpty(producto.Id))
+            if (producto == null || string.IsNullOrEmpty(producto.Id)) // Comprueba si el Id es válido (string)
             {
                 return BadRequest(new { error = "Producto inválido" });
             }
@@ -50,9 +52,9 @@ namespace Ecommers.Controllers
     // Clase modelo para Producto
     public class Producto
     {
-        public string Id { get; set; }
+        public string Id { get; set; }  // Id es un string
         public string Imagen { get; set; }
         public string Nombre { get; set; }
-        public string Precio { get; set; }
+        public string Precio { get; set; } // Asegúrate de que Precio sea string si es recibido como string desde el cliente
     }
 }

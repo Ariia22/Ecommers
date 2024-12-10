@@ -10,6 +10,6 @@ namespace Ecommers.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Productos { get; set; }
-
+        public DbSet<CartItem> CartItems { get; set; } // Para almacenar los productos del carrito
     }
 }

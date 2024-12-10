@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<CartItem>
+
 @{
     ViewData["Title"] = "Carrito de Compras";
-    string subtotal = ViewData["Subtotal"] as string;
-    string iva = ViewData["IVA"] as string;
-    string total = ViewData["Total"] as string;
+    var subtotal = ViewData["Subtotal"] as string;
+    var iva = ViewData["IVA"] as string;
+    var total = ViewData["Total"] as string;
 }
 
 <h2>Carrito de Compras</h2>
@@ -32,10 +33,12 @@ else
                     <td>@item.Price.ToString("C", new System.Globalization.CultureInfo("es-MX"))</td>
                     <td>
                         <div class="d-flex align-items-center">
+                            <!-- Formulario para decrementar la cantidad -->
                             <form asp-action="Decrement" asp-route-id="@item.Id" method="post">
                                 <button class="btn btn-sm btn-outline-secondary" type="submit" @(item.Quantity <= 1 ? "disabled" : "")>-</button>
                             </form>
                             <span class="mx-2">@item.Quantity</span>
+                            <!-- Formulario para incrementar la cantidad -->
                             <form asp-action="Increment" asp-route-id="@item.Id" method="post">
                                 <button class="btn btn-sm btn-outline-secondary" type="submit" @(item.Quantity >= 10 ? "disabled" : "")>+</button>
                             </form>
@@ -43,6 +46,7 @@ else
                     </td>
                     <td>@item.TotalPrice.ToString("C", new System.Globalization.CultureInfo("es-MX"))</td>
                     <td>
+                        <!-- Formulario para eliminar el producto -->
                         <form asp-action="Remove" asp-route-id="@item.Id" method="post">
                             <button class="btn btn-sm btn-danger" type="submit">X</button>
                         </form>
