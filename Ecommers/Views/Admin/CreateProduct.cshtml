@@ -1,18 +1,33 @@
-﻿@model Ecommers.Models.Product;
-<h2>Crear Producto</h2>
+﻿@model Ecommers.Models.Product
 
-<form asp-action="CreateProduct" method="post">
+<h2>Añadir Producto</h2>
+
+<form asp-action="Create" method="post">
     <div class="form-group">
-        <label for="Name">Nombre del Producto</label>
-        <input type="text" asp-for="Nombre" class="form-control" required />
+        <label for="Nombre">Nombre</label>
+        <input type="text" class="form-control" id="Nombre" name="Nombre" value="@Model?.Nombre" required />
     </div>
+
     <div class="form-group">
-        <label for="Price">Precio</label>
-        <input type="number" asp-for="Precio" class="form-control" required />
+        <label for="Descripcion">Descripción</label>
+        <textarea class="form-control" id="Descripcion" name="Descripcion">@Model?.Descripcion</textarea>
     </div>
+
     <div class="form-group">
-        <label for="Description">Descripción</label>
-        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <label for="Precio">Precio</label>
+        <input type="number" step="0.01" class="form-control" id="Precio" name="Precio" value="@Model?.Precio" required />
     </div>
+
+    <div class="form-group">
+        <label for="Stock">Stock</label>
+        <input type="number" class="form-control" id="Stock" name="Stock" value="@Model?.Stock" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ImagenURL">URL de la Imagen</label>
+        <input type="text" class="form-control" id="ImagenURL" name="ImagenURL" value="@Model?.ImagenURL" />
+    </div>
+
     <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>

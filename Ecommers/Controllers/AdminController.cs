@@ -101,5 +101,32 @@ namespace Ecommers.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Productos.Add(product);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    // Registrar el error
+                    Console.WriteLine("Error al guardar el producto: " + ex.Message);
+                    ModelState.AddModelError("", "No se pudo guardar el producto. Intente nuevamente.");
+                }
+            }
+            return View(product);
+        }
+
     }
 }
